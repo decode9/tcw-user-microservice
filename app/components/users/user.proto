@@ -1,0 +1,30 @@
+syntax= "proto3";
+
+message Empty {};
+
+message Data {
+    int32 id = 1;
+    string name = 2;
+    string lastname = 3;
+    string identification = 4;
+    int32 type_identification = 5;  
+};
+
+message DataResponse {
+    Data data = 1;
+}
+
+message DataMultipleResponse {
+    repeated Data data = 1;
+}
+
+service DataProcessor {
+    rpc SaveData(Data) returns (DataResponse) {}
+    rpc GetData(Empty) returns (DataMultipleResponse) {}
+    rpc UpdateData(Data) returns (DataResponse) {}
+    rpc DeleteData(Data) returns (Empty) {}
+}
+
+
+
+
