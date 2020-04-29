@@ -2,16 +2,16 @@ import grpc
 from . import user_pb2 as user_proto
 
 
-class UserStub(object):
+class Stub(object):
 
     def __init__(self, channel):
         self.SaveData = channel.unary_unary(
-            '/Data/SaveData',
+            '/User/SaveData',
             request_serializer=user_proto.Data.SerializeToString,
             response_deserializer=user_proto.DataResponse.FromString,
         )
         self.GetData = channel.unary_unary(
-            '/Data/GetData',
+            '/User/GetData',
             request_serializer=user_proto.Empty.SerializeToString,
             response_deserializer=user_proto.DataMultipleResponse.FromString,
         )
