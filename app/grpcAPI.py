@@ -9,6 +9,8 @@ from .utils import hotKeys
 
 
 class Beetle():
+    
+    services = set()
 
     def __init__(self, **extraValues):
         self.extraValues = extraValues
@@ -45,8 +47,10 @@ class Beetle():
                 print("The server was secure")
 
         print("Server Started in IP " + self.ip)
-        server.start()
         self._server = server
+        self.__insertControllers()
+        server.start()
+
         self.__loopServer()
 
     def __loopServer(self, ):
@@ -60,7 +64,6 @@ class Beetle():
             hotkey = hotKeys(COMBINATIONS, self.__updateServer)
         except KeyboardInterrupt:
             self._closeServer()
-        
 
     def __updateServer(self, key):
         try:
@@ -68,7 +71,7 @@ class Beetle():
                 self._closeServer()
                 print("Server was Stopped")
                 exit()
-                
+
             if key == keyboard.KeyCode(char='\x15'):
                 print('Server was Restarted')
                 self._closeServer()
@@ -76,6 +79,16 @@ class Beetle():
 
         except KeyboardInterrupt:
             self._closeServer()
+
+    def __insertControllers(self):
+
+        if len(self.services) != 0:
+            for controller in self.services:
+                controller.add_service_to_server(
+                    controller, self._server
+                )
+
+        pass
 
     def _closeServer(self):
         self._server.stop(0)

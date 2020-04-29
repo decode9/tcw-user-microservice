@@ -1,6 +1,5 @@
 import grpc
-
-import user_pb2 as user_proto
+from . import user_pb2 as user_proto
 
 
 class UserStub(object):
