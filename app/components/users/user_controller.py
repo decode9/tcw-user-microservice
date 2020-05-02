@@ -1,40 +1,89 @@
 from .user_grpc import UserService
+from ...utils import Database
 from . import user_pb2 as user_proto
 
 
 class UserController(UserService):
 
-    def GetData(self, request, context):
-        response = user_proto.DataMultipleResponse(
-            data=[
-                {
-                    "id": 1,
-                    "name": 'Jorge',
-                    "lastname": "Bastidas",
-                    "identification": "24181317",
-                    "type_identification": 2
-                },
-                {
-                    "id": 2,
-                    "name": 'Luis',
-                    "lastname": "Perez",
-                    "identification": "18568986",
-                    "type_identification": 2
-                }
-            ]
-        )
+    def __init__(self):
+        self.db = Database()
 
-        return response
+    def GetData(self, request, context):
+        try:
+            users = self.db.find('users')
+
+            data = []
+
+            if users['count']:
+
+                data = users['data']
+
+            response = user_proto.DataMultipleResponse(
+                data=list(data)
+            )
+
+            return response
+        except Exception as error:
+            print(error)
+            response = user_proto.DataMultipleResponse(
+                data=[]
+            )
+
+            return response
 
     def SaveData(self, request, context):
-        response = user_proto.DataResponse(
-            data={
-                "id": request.id,
+
+        try:
+            data = {
                 "name": request.name,
                 "lastname": request.lastname,
                 "identification": request.identification,
-                "type_identification": request.type_identification
+                "type_identification": request.type_identification,
+                "phone_number": request.phone_number
             }
-        )
 
-        return response
+            data = self.db.insert_one('users', data)
+
+            response = user_proto.DataResponse(data=data)
+
+            return response
+        except Exception as error:
+            print(error)
+
+    def UpdateData(self, request, context):
+
+        try:
+            data = {
+                "name": request.name,
+                "lastname": request.lastname,
+                "identification": request.identification,
+                "type_identification": request.type_identification,
+                "phone_number": request.phone_number
+            }
+
+            print('UPDATE')
+            print(request._id)
+
+
+            data = self.db.update_one('users', {"_id": request._id}, data)
+
+            response = user_proto.DataResponse(data=data)
+
+            return response
+        except Exception as error:
+            print(error)
+
+    def DeleteData(self, request, context):
+
+        try:
+            data = {
+                "_id": request._id,
+            }
+
+            data = self.db.delete_one('users', data)
+
+            response = user_proto.DataResponse(data=data)
+
+            return response
+        except Exception as error:
+            print(error)

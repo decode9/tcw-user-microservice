@@ -43,7 +43,7 @@ class Beetle():
         if 'secure' in self.extraValues:
             if self.extraValues['secure']:
                 credentials = self.__setPrivateKeys()
-                server.add_insecure_port(self.ip, credentials)
+                server.add_secure_port(self.ip, credentials)
                 print("The server was secure")
 
         print("Server Started in IP " + self.ip)

@@ -3,11 +3,52 @@ syntax= "proto3";
 message Empty {};
 
 message Data {
-    int32 id = 1;
+    string _id = 1;
     string name = 2;
     string lastname = 3;
     string identification = 4;
-    int32 type_identification = 5;  
+    int32 type_identification = 5;
+    string phone_number = 6;
+
+    message Document {
+        enum DocumentType {
+            GENERAL = 0;
+            SELFIE = 1;
+            IDENTIFICATION_SELFIE = 2;
+            IDENTIFICATION = 3;
+            RESIDENCE_PROOF = 4;
+            INCOMING_STATEMENT = 5;
+            JURIDIC_DOCUMENT = 6;
+        }
+        DocumentType document_type = 1;
+        string document = 2;
+    }
+    
+    message Directory {
+    
+        message Favorite {
+            string label = 1;
+            string address = 2;
+        }
+    
+        message Account {
+            string label = 1;
+            string address = 2;
+        }
+    
+        repeated Favorite favorite = 1;
+        repeated Account account = 2;
+    }
+
+    message Options {
+        string language = 1;
+        string currency = 2;
+    }
+
+    repeated Document document = 7;
+    Directory directory = 8;
+    Options option = 9;
+
 };
 
 message DataResponse {
