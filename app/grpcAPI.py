@@ -88,8 +88,6 @@ class Beetle():
                     controller, self._server
                 )
 
-        pass
-
     def _closeServer(self):
         self._server.stop(0)
 

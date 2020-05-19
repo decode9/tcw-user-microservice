@@ -1,15 +1,16 @@
-from .user_grpc import UserService
+from .user_pb2_grpc import DataProcessorServicer, add_DataProcessorServicer_to_server
 from ...utils import Database
 from . import user_pb2 as user_proto
 
 
-class UserController(UserService):
+class UserController(DataProcessorServicer):
 
     def __init__(self):
         self.db = Database()
 
     def GetData(self, request, context):
         try:
+            print("Enter Get Method")
             users = self.db.find('users')
 
             data = []
@@ -17,10 +18,11 @@ class UserController(UserService):
             if users['count']:
 
                 data = users['data']
-
+            print('Get Response')
             response = user_proto.DataMultipleResponse(
                 data=list(data)
             )
+            print('Return Response')
 
             return response
         except Exception as error:
@@ -31,7 +33,7 @@ class UserController(UserService):
 
             return response
 
-    def SaveData(self, request, context):
+    def PostData(self, request, context):
 
         try:
             data = {
@@ -50,7 +52,7 @@ class UserController(UserService):
         except Exception as error:
             print(error)
 
-    def UpdateData(self, request, context):
+    def PutData(self, request, context):
 
         try:
             data = {
@@ -63,7 +65,6 @@ class UserController(UserService):
 
             print('UPDATE')
             print(request._id)
-
 
             data = self.db.update_one('users', {"_id": request._id}, data)
 
@@ -87,3 +88,6 @@ class UserController(UserService):
             return response
         except Exception as error:
             print(error)
+
+    def add_service_to_server(self, service, server):
+        add_DataProcessorServicer_to_server(service, server)

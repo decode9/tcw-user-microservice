@@ -1,5 +1,7 @@
 syntax= "proto3";
 
+package users;
+
 message Empty {};
 
 message Data {
@@ -60,9 +62,9 @@ message DataMultipleResponse {
 }
 
 service DataProcessor {
-    rpc SaveData(Data) returns (DataResponse) {}
     rpc GetData(Empty) returns (DataMultipleResponse) {}
-    rpc UpdateData(Data) returns (DataResponse) {}
+    rpc PostData(Data) returns (DataResponse) {}
+    rpc PutData(Data) returns (DataResponse) {}
     rpc DeleteData(Data) returns (Empty) {}
 }
 
