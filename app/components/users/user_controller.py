@@ -1,5 +1,5 @@
 from .user_pb2_grpc import DataProcessorServicer, add_DataProcessorServicer_to_server
-from ...utils import Database
+from ...utils import Database, BusService
 from . import user_pb2 as user_proto
 
 
@@ -7,17 +7,25 @@ class UserController(DataProcessorServicer):
 
     def __init__(self):
         self.db = Database()
+        self.bus = BusService(None)
 
     def GetData(self, request, context):
         try:
             print("Enter Get Method")
+
+            metadata = context.invocation_metadata()
+
             users = self.db.find('users')
+
+            print('Verify Auth')
+
+            self.verify_authentication(metadata)
 
             data = []
 
             if users['count']:
-
                 data = users['data']
+
             print('Get Response')
             response = user_proto.DataMultipleResponse(
                 data=list(data)
@@ -88,6 +96,25 @@ class UserController(DataProcessorServicer):
             return response
         except Exception as error:
             print(error)
+
+    def verify_authentication(self, metadata):
+
+        access_token = ''
+
+        for meta in metadata:
+            if meta.key == 'access_token':
+                access_token = meta.value
+
+        params = {
+            'access_token': access_token
+        }
+
+        self.bus.TransmitChannel()
+
+        print('BUS CALL')
+        print(params)
+
+        print(self.bus.call(params))
 
     def add_service_to_server(self, service, server):
         add_DataProcessorServicer_to_server(service, server)
