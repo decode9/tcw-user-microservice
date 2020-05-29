@@ -22,7 +22,7 @@ class UserController(DataProcessorServicer):
             auth = self.verify_authentication(metadata)
 
             if not auth['result']:
-                raise Exception('Unauthenticated')
+                raise Exception(auth['message'])
 
             data = []
 
