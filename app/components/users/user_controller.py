@@ -19,7 +19,10 @@ class UserController(DataProcessorServicer):
 
             print('Verify Auth')
 
-            self.verify_authentication(metadata)
+            auth = self.verify_authentication(metadata)
+
+            if not auth['result']:
+                raise Exception('Unauthenticated')
 
             data = []
 
@@ -35,11 +38,9 @@ class UserController(DataProcessorServicer):
             return response
         except Exception as error:
             print(error)
-            response = user_proto.DataMultipleResponse(
-                data=[]
-            )
-
-            return response
+            context.set_code(500)
+            context.set_details(str(error))
+            raise AssertionError(str(error))
 
     def PostData(self, request, context):
 
@@ -59,6 +60,9 @@ class UserController(DataProcessorServicer):
             return response
         except Exception as error:
             print(error)
+            context.set_code(500)
+            context.set_details('Explode')
+            raise AssertionError('Explode')
 
     def PutData(self, request, context):
 
@@ -81,6 +85,9 @@ class UserController(DataProcessorServicer):
             return response
         except Exception as error:
             print(error)
+            context.set_code(500)
+            context.set_details('Explode')
+            raise AssertionError('Explode')
 
     def DeleteData(self, request, context):
 
@@ -96,6 +103,9 @@ class UserController(DataProcessorServicer):
             return response
         except Exception as error:
             print(error)
+            context.set_code(500)
+            context.set_details('Explode')
+            raise AssertionError('Explode')
 
     def verify_authentication(self, metadata):
 
@@ -114,7 +124,11 @@ class UserController(DataProcessorServicer):
         print('BUS CALL')
         print(params)
 
-        print(self.bus.call(params))
+        response = self.bus.call('rpc_queue',params)
+
+        print(response)
+
+        return response
 
     def add_service_to_server(self, service, server):
         add_DataProcessorServicer_to_server(service, server)
