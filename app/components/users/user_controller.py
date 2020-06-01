@@ -15,8 +15,6 @@ class UserController(DataProcessorServicer):
 
             metadata = context.invocation_metadata()
 
-            users = self.db.find('users')
-
             print('Verify Auth')
 
             auth = self.verify_authentication(metadata)
@@ -24,6 +22,8 @@ class UserController(DataProcessorServicer):
             if not auth['result']:
                 raise Exception(auth['message'])
 
+            users = self.db.find('users')
+            
             data = []
 
             if users['count']:

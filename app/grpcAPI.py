@@ -53,7 +53,7 @@ class Beetle():
 
         self.__loopServer()
 
-    def __loopServer(self, ):
+    def __loopServer(self):
         try:
             print('Press Ctrl+C if you want shutdown the server')
             print('Press Ctrl+U if you want restart the server')

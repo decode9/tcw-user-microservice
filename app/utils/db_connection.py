@@ -12,7 +12,6 @@ class Database():
         self.host = ip
         self.port = port
         self.database = db
-        db = set()
         self.__client = set()
 
     def find(self, collection, filter={}):
