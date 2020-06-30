@@ -67,7 +67,3 @@ service DataProcessor {
     rpc PutData(Data) returns (DataResponse) {}
     rpc DeleteData(Data) returns (Empty) {}
 }
-
-
-
-
